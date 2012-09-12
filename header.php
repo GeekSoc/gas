@@ -1,3 +1,4 @@
+<?php require 'classlib/autoload.php' ?>
 <?php require 'ldapconnect.php'; ?>
 <!DOCTYPE html>
 <html lang="en">

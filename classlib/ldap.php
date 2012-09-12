@@ -1,8 +1,8 @@
 <?php
 class gsLDAP {
     
-    private $server = "ldap://ldap.geeksoc.org";
-    private $dn = "ou=People,dc=geeksoc,dc=org";
+    private $server; = $config['ldap']['server'];
+    private $dn; = $config['ldap']['dn'];
     
     private $con;
     
@@ -10,6 +10,10 @@ class gsLDAP {
     
     public function __construct() {
         $this->connect();
+        
+        global $config;
+        $this->server; = $config['ldap']['server'];
+        $this->dn; = $config['ldap']['dn'];
     }
     
     public function user_get($sUser) {
