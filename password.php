@@ -1,56 +1,75 @@
-<?php require 'header.php'; ?>
+<?php require 'ldapconnect.php'; ?>
+<?php
 
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span2">
-          <div class="well sidebar-nav">
-            <ul class="nav nav-list">
-							<li class="nav-header"><img src="http://www.gravatar.com/avatar/<?php echo $avatar; ?>?s=20&d=mm" /> <?php echo $user_get[0]["uid"][0]; ?></li>
-              <li><a href="index.php">Details</a></li>
-              <li class="active"><a href="password.php">Change Password</a></li>
-              <li><a href="sshkeys.php">SSH Keys</a></li>
-            </ul>
-          </div><!--/.well -->
-        </div><!--/span-->
+    $pageTitle = " - Change Password";    
+
+  if (isset($_POST['oldpw'])) {
+    if (ldap_bind($con, $userdn, $_POST['oldpw'])===true) {
+      if ($_POST['confirmpw'] == $_POST['newpw']) {
+        mt_srand((double)microtime()*1000000);
+        $salt = pack("CCCCCCCC", mt_rand(), mt_rand(), mt_rand(), mt_rand(), mt_rand(), mt_rand(), mt_rand(), mt_rand());
+        $password = "{SSHA}" . base64_encode( sha1( $_POST['newpw'] . $salt, true) . $salt );
+        $entry=array();
+        $entry['userpassword']=$password;
+        $_SESSION['password']=$_POST['newpw'];
+        ldap_modify($con,$userdn,$entry);
+        $success = "Password updated successfully.";
+      } else {
+        $error = "<strong>Error:</strong> Passwords do not match.";
+      }
+    } else {
+      $error = "<strong>Error:</strong> Password incorrect.";
+    }
+  }
+?>
+<?php require 'header.php'; ?>
+<?php require 'menu.php'; ?>
+
         <div class="span10">
-          <!-- <div class="page-header">
-            <h1>Your GeekSoc Account:</h1>
-          </div> -->
-          <div class="row-fluid">
-            <div class="span4">
-							<form class="form-horizontal">
-							  <fieldset>
-							    <legend>Change Password</legend>
-									<div class="control-group">
-							      <label class="control-label" for="oldpw">Old Password</label>
-							      <div class="controls">
-							        <input type="password" class="input-xlarge" id="oldpw">
-							      </div>
-							    </div>
-									<div class="control-group">
-							      <label class="control-label" for="newpw">New Password</label>
-							      <div class="controls">
-						        <input type="password" class="input-xlarge" id="newpw">
-							      </div>
-							    </div>
-									<div class="control-group">
-							      <label class="control-label" for="confirmpw">Confirm Password</label>
-							      <div class="controls">
-						        <input type="password" class="input-xlarge" id="confirmpw">
-							      </div>
-							    </div>
-									<div class="form-actions">
-										<button type="submit" class="btn btn-primary">Update Password</button>
-									</div>
-							  </fieldset>
-							</form>
-							
-              <!-- <p><a class="btn" href="#">View details &raquo;</a></p> -->
+          <div class="row">
+            <div class="span5">
+              <form id="form" class="form-horizontal" action="password.php" method="post">
+                <fieldset>
+                  <legend>Change Password</legend>
+                  <div class="control-group">
+                    <?php if (isset($error)) : ?>
+                      <div class="alert alert-error">
+                        <?php echo "$error"; ?>
+                      </div>
+                    <?php elseif (isset($success)) : ?>
+                      <div class="alert alert-success">
+                        <?php echo "$success"; ?>
+                      </div>
+                    <?php endif; ?>
+                    <label class="control-label" for="oldpw">Old Password</label>
+                    <div class="controls">
+                      <input type="password" class="input-xlarge required" name="oldpw" id="oldpw">
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <label class="control-label" for="newpw">New Password</label>
+                    <div class="controls">
+                    <input type="password" class="input-xlarge required" name="newpw" id="newpw" minlength="8">
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <label class="control-label" for="confirmpw">Confirm Password</label>
+                    <div class="controls">
+                    <input type="password" class="input-xlarge required" name="confirmpw" id="confirmpw">
+                    </div>
+                  </div>
+                  <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Update Password</button>
+                  </div>
+                </fieldset>
+              </form>
             </div><!--/span-->
+						<div class="span4 offset1">
+						<h3>Note</h3>
+						<p>This password will be used for all GeekSoc services. Please choose something secure.</code></p>
+
+						</div>
           </div><!--/row-->
         </div><!--/span-->
-      </div><!--/row-->
 
-      <hr>
-
-      <?php require 'footer.php'; ?>
+<?php require 'footer.php'; ?>
