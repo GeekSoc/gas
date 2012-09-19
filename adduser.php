@@ -8,8 +8,8 @@ if (!isUserInGroup($con, $user, "gsag")) {
 
     if (isset($_POST['firstname']) && strlen($_POST['uid']) > 2) {
         $uid = $_POST['uid'];
-        $first = $_POST['firstname'];
-        $last = $_POST['lastname'];
+        $first = ucase($_POST['firstname']);
+        $last = ucase($_POST['lastname']);
         $stuno = $_POST['studentnumber'];
         $email = $_POST['email'];
         

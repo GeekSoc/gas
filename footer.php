@@ -1,7 +1,7 @@
 </div>
 <hr>
 <footer>
-  <p>&copy; GeekSoc 2012</p>
+  <p>&copy; GeekSoc 2012 || License Pending</p>
 </footer>
 
 </div><!--/.fluid-container-->
