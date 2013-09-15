@@ -91,6 +91,27 @@
                   </div>
                 </fieldset>
               </form>
+              <?php if($user_get[0]['haspaid'][0] == "FALSE") : ?>
+		<br /><br />
+		<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+		  <input type="hidden" name="cmd" value="_xclick-subscriptions">
+		  <input type="hidden" name="business" value="gsag@geeksoc.org">
+		  <input type="hidden" name="lc" value="GB">
+		  <input type="hidden" name="item_name" value="1 Year GeekSoc Membership - <?=$user_get[0]['uid'][0]?>">
+		  <input type="hidden" name="item_number" value="1">
+		  <input type="hidden" name="no_note" value="1">
+		  <input type="hidden" name="src" value="1">
+		  <input type="hidden" name="a3" value="3.00">
+		  <input type="hidden" name="p3" value="1">
+		  <input type="hidden" name="t3" value="Y">
+		  <input type="hidden" name="currency_code" value="GBP">
+		  <input type="hidden" name="bn" value="PP-SubscriptionsBF:btn_subscribeCC_LG.gif:NonHostedGuest">
+		  <input type="image" src="https://www.paypalobjects.com/en_US/GB/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal – The safer, easier way to pay online.">
+		  <img alt="" border="0" src="https://www.paypalobjects.com/en_GB/i/scr/pixel.gif" width="1" height="1">
+		  <br /><br />
+		  <p><strong>Any subscription payments will be verified manually, it may take some time to reflect on your account status. If you made your payment over 1 day ago - please contact us on <a href="mailto:accounts.geeksoc.org">accounts.geeksoc.org</a>.</strong></p>
+		</form>
+	      <?php endif; ?>
             </div><!--/span-->
 
 						<div class="span4 offset1">
