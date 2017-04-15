@@ -143,6 +143,8 @@ class User
     {
         // remove whitespace
         $name = preg_replace( '/\s+/', '', $name);
+        // ...and anything non-alphanumeric
+        $name = preg_replace("/[^a-zA-Z0-9\s]/", "", $name);
         $name = strtolower($name);
         return $name;
     }
